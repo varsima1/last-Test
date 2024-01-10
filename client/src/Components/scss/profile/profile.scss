@@ -1,0 +1,22 @@
+.ProfileContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: auto;
+    margin-top: 50px;
+    margin-bottom: 50px;
+  }
+  .ProfileContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  .profile-image{
+  width: 350px;
+  height: 350px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: #ddd;
+  }

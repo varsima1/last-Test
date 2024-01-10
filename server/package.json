@@ -1,0 +1,29 @@
+{
+  "name": "scroll_app",
+  "version": "3.0.0",
+  "description": "scroll_app",
+  "main": "server.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV='production' node .",
+    "test": "node test.js",
+    "dev": "cross-env NODE_ENV='development' nodemon ."
+  },
+  "author": "David Yakin",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "chalk": "^4.1.2",
+    "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "joi": "^17.7.0",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.21",
+    "mongoose": "^6.7.2",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}

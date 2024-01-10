@@ -1,0 +1,39 @@
+.Lcontainer{
+    text-align: center;
+    margin-top: 41vh;
+    margin-bottom:41vh ;
+    }
+.Lsame{
+    background: transparent ;
+    border: 1px solid #dddfe2;
+    color: #ccc;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    height: 22px;
+    line-height: 16px;
+    vertical-align: middle;
+    font-size: 17px;
+    padding: 14px 16px;
+    width: 330px;
+    border-radius: 6px;
+    margin: 5px 15px;
+}
+.Lbutton,.signbutton{
+    background-color: #1877f2;
+    border: none;
+    border-radius: 6px;
+    font-size: 20px;
+    line-height: 48px;
+    padding: 0 16px;
+    width: 330px;
+    color: #fff;
+    margin: 5px 15px;
+    cursor: pointer;
+    text-decoration: none;
+    }
+    .signbutton{
+    }
+    .password-toggle-icon{
+        margin-right: -20px;
+    }
+

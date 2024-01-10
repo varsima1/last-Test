@@ -1,0 +1,19 @@
+.Settings-container{
+    display: grid;
+    place-items: center;
+    height: 123vh;
+}
+.editUsers{
+    font-size: 100px;
+}
+
+.Sbsave{
+    margin-top: 25px;
+}
+@media (max-width:450px){
+    .editUsers{
+    font-size: 80px;
+}
+
+}
+

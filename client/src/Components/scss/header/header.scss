@@ -1,0 +1,60 @@
+
+.HLogin,.HSignup{
+    background-color: transparent;
+    border: 0px;
+    color: white;
+    margin: 15px;
+    text-decoration: none;
+}
+.logo{
+    background-image: url(../../image/logo.png);
+    background-repeat: no-repeat;
+    width: 40px;
+    height: 40px;
+}
+.nav-link{
+    text-decoration: underline;
+    color: inherit;
+    transition: background-color 1.0s;
+  
+    &:hover {
+      text-decoration: underline;
+      transition: 1.0s;
+      background-color: #b3b1b1;
+      margin-left: -15px;
+      border-radius: 15px;
+    }
+  }
+  
+  #user-menu {
+    display: flex;
+    align-items: center;
+    transition: 1ms;
+  
+    &:hover {
+        text-decoration: underline;
+        transition: 1.0s;
+        background-color: #b3b1b1;
+        border-radius: 15px;
+    }
+  }
+  .cart-icon{
+    background-color: transparent;
+    border: 0px;
+    color:white;
+  }
+
+  @media (max-width: 900px){
+    .nav-link:hover{
+      text-decoration: none;
+      transition: 0s;
+      background-color: transparent;
+      margin-left: 0px;
+    }
+    .dropdown-button:hover{
+      text-decoration: none;
+      transition: 0s;
+      background-color: transparent;
+      margin-left: 0px;
+    }
+  }
