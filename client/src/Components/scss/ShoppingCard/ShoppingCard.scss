@@ -1,0 +1,63 @@
+.ShoppingCardContainer {
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #333;
+  }
+  
+  .shoppingTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+  }
+  
+  
+  th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .shoppingCardimg {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+  
+  .FaTrash {
+    cursor: pointer;
+    color: #e74c3c;
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .ShoppingCardContainer {
+      max-width: 100%;
+    }
+  
+    .shoppingCardimg {
+      width: 30px;
+      height: 30px;
+    }
+  }
+  @media (max-width: 471px) {
+    .ShoppingCardContainer {
+      max-width: 100%;
+      padding: 0px;
+    }
+  
+    .shoppingCardimg {
+      width: 30px;
+      height: 30px;
+    }
+     th, td {
+    padding: 0px;
+  }
+  }

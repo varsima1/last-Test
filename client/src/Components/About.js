@@ -48,6 +48,9 @@ function About() {
       <h2>when you go in market you can find this icon inside cards<br/> with this you can add item in Shopping Basket</h2>
       <h1 className='chooseitem'></h1>
       <hr/>
+      <h2>when you choose item and click on shopping basket icon your icon become green.that mean you added the item in shopp page </h2>
+      <h1 className='accepted'></h1>
+      <hr/>
       <h2>your choosen item will be here</h2>
       <h1 className='busket'></h1>
       <hr/>

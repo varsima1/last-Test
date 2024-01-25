@@ -76,16 +76,17 @@ function EditCard({ onCancel, onCardUpdate }) {
       onCardUpdate(response.data);
     } catch (error) {
       console.error('Error updating card:', error.message);
-      // Handle error state
     }
   };
 
   if (!userObject?.isSeller) {
     return <ErrorPage />;
   }
-
+  if (!token) {
+    return <ErrorPage />;
+  }
   return (
-    <div className="card-container">
+    <div style={{marginBottom:'500px'}} className="card-container">
       <Form onSubmit={handleUpdate}>
         <h2>Edit Item Card</h2>
         <div>

@@ -1,31 +1,29 @@
-/* market.scss */
-
 .slider-container{
   margin-bottom: 0px;
 }
 .slide1 {
   position: relative;
-  
 
   img {
     width: 100%;
+    height: 100%;
   }
 
   .text-overlay {
     position: absolute;
-    bottom: -8px; /* Position text at the bottom */
+    bottom: -8px;
     left: 50%;
     transform: translate(-50%, 0);
     color: #fff;
     padding: 20px;
     background: rgba(0, 0, 0, 0.5);
-    width: 100%; /* Ensure text overlay spans the entire width */
+    width: 100%;
     text-align: center;
   }
 }
 
 .space{
-  height: 900px;
+  height: auto;
 }
 
 .custom-prev,
@@ -116,10 +114,16 @@
     }
   }
 
-/* Mobile styles */
+  .shop-icon {
+    color: grey;
+  }
+  
+  .added-to-cart {
+    color: green;
+  }
 @media (max-width: 767px) {
   .slick-dots {
-    bottom: 10px; /* Adjust the dots position for mobile screens */
+    bottom: 10px;
   }
 
   .search-bar {
@@ -128,7 +132,7 @@
 
     input {
       margin-top: 10px;
-      width: 90%; /* Increase input width for better mobile appearance */
+      width: 90%;
     }
 
     .icons {
@@ -146,23 +150,23 @@
 
   .slide1 {
     h1 {
-      font-size: 1.5rem; /* Adjust heading font size for better readability on mobile */
+      font-size: 1.5rem;
     }
 
     p {
-      font-size: 1rem; /* Adjust paragraph font size for better readability on mobile */
+      font-size: 1rem;
     }
 
     img {
-      max-height: 200px; /* Set a maximum height for the image on mobile */
+      max-height: 200px;
     }
   }
 }
 
-/* Tablet styles */
+
 @media (min-width: 768px) and (max-width: 1024px) {
   .slick-dots {
-    bottom: 20px; /* Adjust the dots position for tablet screens */
+    bottom: 20px;
   }
   .search-bar {
     flex-direction: row;
@@ -187,31 +191,31 @@
 
   .slide1 {
     h1 {
-      font-size: 2rem; /* Adjust heading font size for better readability on tablets */
+      font-size: 2rem;
     }
 
     p {
-      font-size: 1.25rem; /* Adjust paragraph font size for better readability on tablets */
+      font-size: 1.25rem;
     }
 
     img {
-      max-height: 300px; /* Set a maximum height for the image on tablets */
+      max-height: 300px;
     }
   }
 }
 
-/* Larger screens (after 500px width) */
+
 @media (min-width: 500px) {
   .search-bar {
-    height: 100px; /* Adjust the height of the search bar */
+    height: 100px;
   }
 
   .slide1 {
-    height: 400px; /* Adjust the height of the slide1 element */
+    height: 400px;
   }
 
   .slide1 img {
-    max-height: 500px; /* Set a maximum height for the image on larger screens */
+    max-height: 500px;
   }
 }
 .mcard-container{
@@ -228,12 +232,11 @@
   text-align: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease-in-out;
-  /* Style for the image */
   overflow: hidden;
   border-radius: 8px;
 }
 .mcards:hover {
-  transform: scale(1.05); /* Add a subtle scale effect on hover */
+  transform: scale(1.05);
 }
 .edit-icon,.trash-icon,.shop-icon{
   margin: 10px;

@@ -22,18 +22,15 @@ function Profile() {
         },
       });
       console.log('Account deleted successfully:', response.data);
-      // Redirect to the login page or perform any other necessary actions after deletion
       logout();
     } catch (error) {
       console.error('Error deleting account:', error);
-      // Handle specific error cases, show appropriate error messages, etc.
     }
   };
 
   useEffect(() => {
     if (!token) {return;}
     const userId = jwtDecode(token)._id;
-    console.log("Fetching user data for userId:", userId);
     const fetchUserData = async () => {
       try {
         const response = await axios.get(`http://localhost:8181/users/${userId}`,{
@@ -45,7 +42,6 @@ function Profile() {
         setUserInfo(response.data);
       } catch (error) {
         console.error("Error fetching user data:", error);
-        // Handle specific error cases, show appropriate error messages, etc.
       }
     };
     
@@ -89,7 +85,7 @@ function Profile() {
               {userInfo.address.houseNumber && <p>House Number: {userInfo.address.houseNumber}</p>}
             </>
           )}
-          <Button onClick={handleDeleteAccount}>Delete Account</Button>
+          <Button style={{marginBottom:'150px'}} onClick={handleDeleteAccount}>Delete Account</Button>
         </div>
       </div>
     </div>

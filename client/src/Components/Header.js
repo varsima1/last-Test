@@ -63,12 +63,12 @@ function Header() {
 
           {/* Cart icon */}
           <Nav.Link as={Link} to='/shoppingCard' >
-            <FontAwesomeIcon icon={faShoppingCart} style={{ height: '20px',margin:'15px',color:'white' }} />
+            <FontAwesomeIcon icon={faShoppingCart} style={{ height: '20px',color:'white',}} />
             </Nav.Link>
           <button className="cart-icon" onClick={() => console.log('Clicked on cart')}>
           </button>
 
-          <Nav  className={`mr-auto ${isMobile && showMobileMenu ? 'mobile-menu' : ''}`}>
+          <Nav   className={`mr-auto ${isMobile && showMobileMenu ? 'mobile-menu' : ''}`}>
             {token ? (
               <DropdownButton
                 // id="user-menu"
@@ -79,9 +79,10 @@ function Header() {
                 }
                 show={isUserMenuOpen}
                 onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                
               >
                 <Nav.Link as={Link} to={'/profile'} className='text-dark' style={{ marginLeft: '10px' }}>My Profile</Nav.Link>
-                <Nav.Link as={Link} to={'/settings'} className='text-dark' style={{ marginLeft: '10px' }}>Settings</Nav.Link>
+                <Nav.Link as={Link} to={'/settings'} className='text-dark' style={{ marginLeft: '10px' }}>Edit User</Nav.Link>
                 <Dropdown.Divider />
                 <Nav.Link onClick={handleLogout} className='text-dark' style={{ marginLeft: '10px' }}>Logout</Nav.Link>
               </DropdownButton>

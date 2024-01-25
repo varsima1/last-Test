@@ -10,6 +10,7 @@ import Signup from "./Components/Signup";
 import Settings from "./Components/Settings";
 import Profile from "./Components/profile";
 import EditCard from "./Components/EditCard";
+import { ShoppingCardProvider } from "./Components/ShoppingCardContext";
 
 import React,{useState} from "react";
 
@@ -17,11 +18,11 @@ export default function Router() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const handleLogin = () => {
-    // Implement your login logic here and set isLoggedIn to true
     setIsLoggedIn(true);
   };
 
     return (
+      <ShoppingCardProvider>
         <Routes>
             <Route path="/" element={<About />} />
             <Route path="/market" element={<Market />} />
@@ -34,5 +35,6 @@ export default function Router() {
             <Route path="/settings" element={<Settings/>} />
             <Route path="/profile" element={<Profile/>} />
         </Routes>
+        </ShoppingCardProvider>
     )
 }

@@ -6,6 +6,7 @@ import ErrorPage from './ErrorPage';
 import { Form, Button } from 'react-bootstrap';
 import { jwtDecode } from 'jwt-decode';
 import './scss/MarketCreateCard/createCard.scss'
+import { Link } from 'react-router-dom';
 
 function MarketCreateCard({ onCardUpload }) {
   const {token,userObject} = useAuth();
@@ -49,19 +50,17 @@ function MarketCreateCard({ onCardUpload }) {
 
       const newCard = {
         image: {
-          url: imageUrl, // Match the expected property name "url"
+          url: imageUrl,
           alt: imageAlt,
         },
-        subtitle, // Update this line to match the expected property name ("subtitle" instead of "title")
-        title,    // Update this line to match the expected property name ("title" instead of "subtitle")
+        subtitle,
+        title,
         description,
         phone,
         price,
         currency,
         category,
       };
-      // console.log('User token before decoding:', token);
-      // Decode the token to get user ID
       const userId = jwtDecode(token)._id;
 
       const response = await axios.post(`http://localhost:8181/cards`, newCard, {
@@ -124,7 +123,7 @@ function MarketCreateCard({ onCardUpload }) {
         </select>
       </div>
       <div>
-        <Button type='submit'>Upload Card</Button>
+      <Button type='submit'>Upload Card</Button>
       </div>
       </Form>
     </div>

@@ -3,15 +3,50 @@ import axios from 'axios';
 import { FaEdit, FaTrash, FaShoppingBasket } from 'react-icons/fa';
 import { useAuth } from './AuthContext';
 import './scss/Market/market.scss';
+import ErrorPage from './ErrorPage';
+import { Link } from 'react-router-dom';
+
 function MyCards() {
   const { token, userObject } = useAuth();
   const [myCards, setMyCards] = useState([]);
+  const [editCardId, setEditCardId] = useState(null);
+  const [cards, setCards] = useState([]);
+
+  const handleEditClick = async (cardId, e) => {
+    const Confirmed = window.confirm('Do you want to edit the card?');
+    if (Confirmed) {
+      try {
+        const response = await axios.put(
+          `http://localhost:8181/cards/${cardId}`,
+          {
+            headers: {
+              'x-auth-token': token,
+            },
+          }
+        );
+        console.log('Card sent successfully');
+        setEditCardId(null);
+  
+        if (response && response.data) {
+          const updatedCard = response.data;
+          setCards((prevCards) =>
+            prevCards.map((prevCard) => (prevCard._id === updatedCard._id ? updatedCard : prevCard))
+          );
+        }
+      } catch (error) {
+        console.error('Error editing card:', error);
+        e.preventDefault();
+      }
+    } else {
+      e.preventDefault();
+    }
+  };
+  
 
   useEffect(() => {
     const fetchMyCards = async () => {
       try {
         if (userObject) {
-          // Update the axios request to include the correct endpoint
           const response = await axios.get(`http://localhost:8181/cards/my-cards`, {
             headers: {
               'x-auth-token': token,
@@ -37,7 +72,6 @@ function MyCards() {
           },
         });
         console.log('Card deleted!');
-        // Notify the parent component that the card is deleted
         setMyCards((prev) =>
           prev.filter((x) => {
             if (x._id === cardId) {
@@ -51,7 +85,10 @@ function MyCards() {
       }
     }
   };
-
+  if (!token) {
+    // Handle the case when the user is null or undefined (redirect to the login page or show a message)
+    return <div><ErrorPage/></div>;
+  }
   return (
     <div className='space'>
       <div className="mcard-container">
@@ -75,10 +112,9 @@ function MyCards() {
                   className="trash-icon"
                   onClick={() => handleDeleteClick(card._id)}
                 />
-                <FaEdit className="edit-icon" />
+                <Link to={'/editCard/' + card._id} style={{color:'grey'}}><FaEdit className="edit-icon" onClick={(e) => handleEditClick(card._id, e)} /></Link>
               </>
             )}
-            <FaShoppingBasket className="shop-icon" />
           </div>
         ))}
       </div>

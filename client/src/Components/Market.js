@@ -15,11 +15,10 @@ import { Link } from 'react-router-dom';
 import withLoader from './loader/withLoader';
 import axios from 'axios';
 import { useAuth } from './AuthContext';
-import EditCard from './EditCard'; // Import the EditCard component
-import { useParams } from 'react-router-dom';
-import ShoppingCard from './ShoppingCard';
+import EditCard from './EditCard';
+import { useShoppingCard } from './ShoppingCardContext';
 
-const categories = ['All', 'Vehicles and Parts', 'Computers and Consoles', 'Headphones', 'Keyboards and Mouses', 'TVs', 'Tables'];
+const categories = ['All', 'Vechiles and Parts', 'Computers and Consoles', 'Headphones', 'Keyboards and Mouses', 'TVs', 'Tables'];
 
 const PrevArrow = ({ onClick }) => (
   <button className="custom-prev" onClick={onClick}>
@@ -37,7 +36,6 @@ function Market() {
   const { token, userObject } = useAuth();
   const [showCategories, setShowCategories] = useState(false);
   const [cards, setCards] = useState([]);
-  const [shoppingCard, setShoppingCard] = useState([]);
   const [editCardId, setEditCardId] = useState(null);
   const sliderSettings = {
     dots: true,
@@ -46,26 +44,49 @@ function Market() {
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 4000,
+    autoplaySpeed: 3500,
     prevArrow: <PrevArrow />,
     nextArrow: <NextArrow />,
   };
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedItems, setSelectedItems] = useState([]);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const { addToCard,removeFromCard } = useShoppingCard();
+
 
   const handleShopping = async (cardId) => {
-    const selectedCard = cards.find((card) => card._id === cardId);
-    setSelectedItems((prevItems) => [...prevItems, selectedCard]);
-
+    const selectedCard = cards.find((card) => card._id === cardId);    
+    // const isCardInShoppingCart = shoppingCard.some((cardItem) => cardItem._id === cardId);
+  
     try {
       await axios.patch(`http://localhost:8181/cards/${cardId}`, null, {
         headers: {
           'x-auth-token': token,
         },
       });
+      if(selectedCard.likes.includes(userObject._id)) {
+        removeFromCard(cardId);
+      }else  {
+        addToCard(selectedCard);
+      }
 
-      // You may choose to update the shopping cart in MongoDB here if needed.
-
+      setCards(prev => {
+        return prev.map(x => {
+          if (x._id !== cardId) {return x;}
+          const likes = x.likes;
+          let newLikes;
+          if (x.likes.includes(userObject._id)) {
+            newLikes =x.likes.filter(userID => userID !== userObject._id);
+          } else {
+            newLikes = [...likes,userObject._id ]
+          }
+          return {
+            ...x,
+            likes: newLikes
+          }
+        })
+      })
+  
       console.log('Shopping successful!');
     } catch (error) {
       console.error('Error shopping:', error);
@@ -78,7 +99,7 @@ function Market() {
     setEditCardId(null);
   };
 
-  const handleEditClick = async (cardId) => {
+  const handleEditClick = async (cardId, e) => {
     const Confirmed = window.confirm('Do you want to edit the card?');
     if (Confirmed) {
       try {
@@ -101,7 +122,10 @@ function Market() {
         }
       } catch (error) {
         console.error('Error editing card:', error);
+        e.preventDefault();
       }
+    } else {
+      e.preventDefault();
     }
   };
   
@@ -151,7 +175,7 @@ function Market() {
     <>
         <div className='slider-container'>
        {/* Slider */}
-        <Slider {...sliderSettings}>
+        <Slider  {...sliderSettings}>
         <div className='slide1' >
           <img src={carImage} alt='Image1' className='Sliderimage'/>
           <div className='text-overlay'>
@@ -262,10 +286,13 @@ function Market() {
               {card.user_id === userObject?._id && (
                 <>
                   <FaTrash className="trash-icon"style={{color:'grey'}} onClick={() => handleDeleteClick(card._id)} />
-                <Link to={'/editCard/' + card._id} style={{color:'grey'}}><FaEdit className="edit-icon" onClick={() => handleEditClick(card._id)} /></Link>
+                <Link to={'/editCard/' + card._id} style={{color:'grey'}}><FaEdit className="edit-icon" onClick={(e) => handleEditClick(card._id, e)} /></Link>
                 </>
               )}
-              <Link to="/shoppingCard"><FaShoppingBasket className="shop-icon" style={{color:'grey'}} onClick={() => handleShopping(card._id)} /></Link>
+            <FaShoppingBasket
+            className={`shop-icon ${card.likes.includes(userObject?._id) ? 'added-to-cart' : ''}`}
+            onClick={() => handleShopping(card._id)}
+/>
             </div>
           ))}
       </div>

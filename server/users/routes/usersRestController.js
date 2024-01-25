@@ -74,8 +74,8 @@ router.get("/:id", auth, async (req, res) => {
     const { id } = req.params;
     const { _id, isAdmin } = req.user;
 
-    console.log(id)
-    console.log(_id)
+    // console.log(id)
+    // console.log(_id)
 
     if (_id !== id && !isAdmin)
       return handleError(
