@@ -69,7 +69,7 @@ function Market() {
       }else  {
         addToCard(selectedCard);
       }
-
+      sessionStorage.setItem('shoppingitem', cardId);
       setCards(prev => {
         return prev.map(x => {
           if (x._id !== cardId) {return x;}

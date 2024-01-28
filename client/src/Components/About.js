@@ -42,17 +42,32 @@ function About() {
       <h2>after login you will see small icon from there you can check your profile,edit information and logout</h2>
       <h1 className='Algoicon'></h1>
       <hr/>
+      <h2>in my profile you can see information abought you and you can delete you account to</h2>
+      <h1 className='deleteacc'></h1>
+      <hr/>
+      <h2>with edit user you can edit your profile information</h2>
+      <h1 className='edituser'></h1>
+      <hr/>
       <h2>if you scroll to much and you want go up back just click this icon</h2>
       <h1 className='arrow'></h1>
       <hr/>
       <h2>when you go in market you can find this icon inside cards<br/> with this you can add item in Shopping Basket</h2>
       <h1 className='chooseitem'></h1>
       <hr/>
-      <h2>when you choose item and click on shopping basket icon your icon become green.that mean you added the item in shopp page </h2>
+      <h2>when you choose item and click on shopping basket icon your icon become green.that mean you added the item in shopp page. if its green and you click once again the icon color will change from green to grey it mean you removed item from shopping page  </h2>
       <h1 className='accepted'></h1>
       <hr/>
       <h2>your choosen item will be here</h2>
       <h1 className='busket'></h1>
+      <hr/>
+      <h2>this how look choosed item before buy</h2>
+      <h1 className='shopitem'></h1>
+      <hr/>
+      <h2>with count you can buy 2 same items or more</h2>
+      <h1 className='count'></h1>
+      <hr/>
+      <h2>count is 1 and more if you click - when you are on 1 it ask</h2>
+      <h1 className='lowerthen1'></h1>
       <hr/>
       <h2>if you are seller and you create card you will see 2 icons with this you can edit or delete your card.<br/>only seller can add delete or edit his own car</h2>
       <h1 className='sellericons'></h1>

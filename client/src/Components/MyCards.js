@@ -4,6 +4,7 @@ import { FaEdit, FaTrash, FaShoppingBasket } from 'react-icons/fa';
 import { useAuth } from './AuthContext';
 import './scss/Market/market.scss';
 import ErrorPage from './ErrorPage';
+import withLoader from './loader/withLoader';
 import { Link } from 'react-router-dom';
 
 function MyCards() {
@@ -86,7 +87,6 @@ function MyCards() {
     }
   };
   if (!token) {
-    // Handle the case when the user is null or undefined (redirect to the login page or show a message)
     return <div><ErrorPage/></div>;
   }
   return (
@@ -94,7 +94,6 @@ function MyCards() {
       <div className="mcard-container">
         {myCards.map((card) => (
           <div className="mcards" key={card._id}>
-            {/* Render each card as needed */}
             <img className="card-image" src={card.image.url} alt={card.image.alt} />
 
             <p className="mcards-title">{card.title}</p>
@@ -105,7 +104,6 @@ function MyCards() {
             <p className="mcards-price">
             {card.price} {card.currency}
             </p>
-            {/* Conditionally render the icons */}
             {card.user_id === userObject?._id && (
               <>
                 <FaTrash
@@ -122,4 +120,4 @@ function MyCards() {
   );
 }
 
-export default MyCards;
+export default withLoader(MyCards);
