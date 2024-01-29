@@ -162,7 +162,6 @@ function ShoppingCard() {
 
   return (
     <div className='ShoppingCardContainer'>
-      <h2>Shopping Card</h2>
       {shoppingCard.length === 0 ? (
         <p>Your shopping card is empty.</p>
       ) : (
@@ -173,9 +172,9 @@ function ShoppingCard() {
                 <th>Image</th>
                 <th>Title</th>
                 <th>Price</th>
-                <th>Currency</th>
+                <th>$/€</th>
                 <th>Count</th>
-                <th>Action</th>
+                {/* <th>Action</th> */}
               </tr>
             </thead>
             <tbody>

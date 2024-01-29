@@ -78,3 +78,17 @@
   }
 
   }
+  @media (max-width: 300px) {
+    .ShoppingCardContainer {
+      max-width: 100%;
+      padding: 0px;
+      margin: 0px;
+    }
+  
+    .shoppingCardimg {
+      width: 30px;
+      height: 30px;
+    }
+
+
+  }

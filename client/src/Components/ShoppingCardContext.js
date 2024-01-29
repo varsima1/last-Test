@@ -94,7 +94,14 @@ export const ShoppingCardProvider = ({ children }) => {
         const response = await axios.get('http://localhost:8181/cards');
         dispatch({
           type: 'ALL',
-          payload: response.data.filter((item) => item.likes.includes(userObject._id)),
+          payload: response.data.filter((item) => {
+            if (userObject._id) {
+              return item.likes.includes(userObject._id);
+            } else {
+              // return true if card is in sessionstorage
+              return true;
+            }
+          })
         });
       } catch (error) {
         console.error('Error fetching cards:', error);

@@ -4,9 +4,10 @@ import axios from 'axios';
 import { useAuth } from './AuthContext';
 import withLoader from './loader/withLoader';
 import ErrorPage from './ErrorPage';
-import { useParams } from 'react-router-dom';
+import { useParams} from 'react-router-dom';
 
-function EditCard({ onCancel, onCardUpdate }) {
+
+function EditCard({ onCardUpdate }) {
   const { token, userObject } = useAuth();
   const params = useParams();
   const { cardId } = params;

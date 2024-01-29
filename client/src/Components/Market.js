@@ -17,8 +17,9 @@ import axios from 'axios';
 import { useAuth } from './AuthContext';
 import EditCard from './EditCard';
 import { useShoppingCard } from './ShoppingCardContext';
+import SearchBar from './SearchBar';
 
-const categories = ['All', 'Vechiles and Parts', 'Computers and Consoles', 'Headphones', 'Keyboards and Mouses', 'TVs', 'Tables'];
+// const categories = ['All', 'Vechiles and Parts', 'Computers and Consoles', 'Headphones', 'Keyboards and Mouses', 'TVs', 'Tables'];
 
 const PrevArrow = ({ onClick }) => (
   <button className="custom-prev" onClick={onClick}>
@@ -48,10 +49,46 @@ function Market() {
     prevArrow: <PrevArrow />,
     nextArrow: <NextArrow />,
   };
-  const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedItems, setSelectedItems] = useState([]);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('All');
   const { addToCard,removeFromCard } = useShoppingCard();
+  const [searchTerm, setSearchTerm] = useState('');
+  const handleSearch = ({ term, category }) => {
+    setSearchTerm(term);
+    setSelectedCategory(category);
+  };
+
+  const handleSort = (order) => {
+    // Assuming cards is your array of items to be sorted
+    let sortedCards;
+
+    switch (order) {
+      case 'asc':
+        // Handle ascending sort logic
+        sortedCards = [...cards].sort((a, b) => a.price - b.price);
+        break;
+      case 'desc':
+        // Handle descending sort logic
+        sortedCards = [...cards].sort((a, b) => b.price - a.price);
+        break;
+      case 'priceHigh':
+        // Handle sorting by high price logic
+        sortedCards = [...cards].sort((a, b) => b.price - a.price);
+        break;
+      case 'priceLow':
+        // Handle sorting by low price logic
+        sortedCards = [...cards].sort((a, b) => a.price - b.price);
+        break;
+      default:
+        // Handle other cases if needed
+        sortedCards = cards;
+        break;
+    }
+
+    // Update the state or perform any other actions with sortedCards
+    setCards(sortedCards);
+  };
 // /////////////////////////////////////////////////////////////////////////////////
 
   // const handleShopping = async (cardId) => {
@@ -82,53 +119,65 @@ function Market() {
 
   const handleShopping = async (cardId) => {
     const selectedCard = cards.find((card) => card._id === cardId);
-  
+    let shoppingItems;
+
     try {
       if (!token) {
-        const shoppingItems = JSON.parse(sessionStorage.getItem('shoppingItems')) || [];
-        shoppingItems.push(cardId);
+        shoppingItems = JSON.parse(sessionStorage.getItem('shoppingItems')) || [];
+        if (shoppingItems.includes(cardId)) {
+          shoppingItems = shoppingItems.filter(x => x._id !== cardId);
+        } else {
+          shoppingItems.push(cardId);
+        }
         sessionStorage.setItem('shoppingItems', JSON.stringify(shoppingItems));
         console.log('Item added to session storage:', cardId);
-        return;
-      }
-  
-      
-      const sessionItems = JSON.parse(sessionStorage.getItem('shoppingItems')) || [];
-      if (sessionItems.length > 0) {
-        
-        await sendItemsToBackend(sessionItems);
-        
-        sessionStorage.removeItem('shoppingItems');
-      }
-  
-      
-      await axios.patch(`http://localhost:8181/cards/${cardId}`, null, {
-        headers: {
-          'x-auth-token': token,
-        },
-      });
-  
-      if (selectedCard.likes.includes(userObject._id)) {
-        removeFromCard(cardId);
       } else {
-        addToCard(selectedCard);
+        await axios.patch(`http://localhost:8181/cards/${cardId}`, null, {
+          headers: {
+            'x-auth-token': token,
+          },
+        });
       }
+  
+      
+      // const sessionItems = JSON.parse(sessionStorage.getItem('shoppingItems')) || [];
+      // if (sessionItems.length > 0) {
+        
+      //   await sendItemsToBackend(sessionItems);
+        
+      //   sessionStorage.removeItem('shoppingItems');
+      // }
+  
+      
+  
+      // if (selectedCard.likes.includes(userObject._id)) {
+      //   removeFromCard(cardId);
+      // } else {
+      //   addToCard(selectedCard);
+      // }
   
 
       setCards(prev => {
         return prev.map(x => {
           if (x._id !== cardId) {return x;}
-          const likes = x.likes;
-          let newLikes;
-          if (x.likes.includes(userObject._id)) {
-            newLikes =x.likes.filter(userID => userID !== userObject._id);
+          if (token) {
+            const likes = x.likes;
+            let newLikes;
+            if (x.likes.includes(userObject._id)) {
+              newLikes =x.likes.filter(userID => userID !== userObject._id);
+            } else {
+              newLikes = [...likes,userObject._id ]
+            }
+            return {
+              ...x,
+              likes: newLikes
+            }
           } else {
-            newLikes = [...likes,userObject._id ]
+            if (shoppingItems.includes(x._id)) {
+              
+            }
           }
-          return {
-            ...x,
-            likes: newLikes
-          }
+
         })
       })
   
@@ -274,8 +323,14 @@ function Market() {
         </div>
         </div>
       </Slider>
+      <SearchBar
+        searchTerm={searchTerm}
+        onSearch={handleSearch}
+        selectedCategory={selectedCategory}
+        onSort={handleSort}
+      />
         {/* Search bar */}
-      <div style={{ position: 'relative', display: 'flex', justifyContent: 'space-around' }}>
+      {/* <div style={{ position: 'relative', display: 'flex', justifyContent: 'space-around' }}>
         <input type="text" placeholder="Search" style={{ paddingLeft: '30px', width: '95%' }} />
         <div style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', right: '60px' }}>
           <FaSearch style={{ cursor: 'pointer' }} />
@@ -287,9 +342,9 @@ function Market() {
       justifyContent:'right',
       marginTop: '20px',
       }}>
-      </div>
+      </div> */}
       {/* Categories dropdown */}
-      {showCategories && (
+      {/* {showCategories && (
         <div className="categories-dropdown">
           <ul>
             {categories.map((category, index) => (
@@ -300,7 +355,7 @@ function Market() {
             ))}
           </ul>
         </div>
-      )}
+      )} */}
     </div >
     <div style={{      
       display: 'flex',
@@ -310,6 +365,7 @@ function Market() {
       }}>
         {userObject?.isSeller && (
         <>
+
         <Link to={'/marketCreateCard'} title='Add item and sell it'>
     <FaPlusCircle  style={{
       height:'40px',
@@ -320,14 +376,21 @@ function Market() {
       borderRadius:'30px',
       }}/>
 </Link>
-
         </>
       )}
       </div>
       <div className="mcard-container">
-        {cards
-          .filter((card) => selectedCategory === 'All' || card.category === selectedCategory)
-          .map((card) => (
+      {cards
+          .filter(
+            (card) =>
+              (selectedCategory === 'All' || card.category === selectedCategory) &&
+              (card.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                card.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                card.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                card.price.toString().includes(searchTerm) ||
+                card.phone.toString().includes(searchTerm))
+          )
+          .map((card) =>(
             <div className="mcards" key={card._id}>
               <img className="card-image" src={card.image.url} alt={card.image.alt} />
 

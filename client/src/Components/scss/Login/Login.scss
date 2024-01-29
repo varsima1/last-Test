@@ -36,4 +36,9 @@
     .password-toggle-icon{
         margin-right: -20px;
     }
-
+    @media (max-width:360px){
+        .Lsame,.Lbutton,.signbutton{
+            width: 240px;
+            margin-left: -5px;
+        }
+      }
