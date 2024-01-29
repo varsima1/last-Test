@@ -52,24 +52,69 @@ function Market() {
   const [selectedItems, setSelectedItems] = useState([]);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const { addToCard,removeFromCard } = useShoppingCard();
+// /////////////////////////////////////////////////////////////////////////////////
 
+  // const handleShopping = async (cardId) => {
+  //   const selectedCard = cards.find((card) => card._id === cardId);    
+  //   // const isCardInShoppingCart = shoppingCard.some((cardItem) => cardItem._id === cardId);
+  
+  //   try {
+  //     await axios.patch(`http://localhost:8181/cards/${cardId}`, null, {
+  //       headers: {
+  //         'x-auth-token': token,
+  //       },
+  //     });
+  //     if(selectedCard.likes.includes(userObject._id)) {
+  //       removeFromCard(cardId);
+  //     }else  {
+  //       addToCard(selectedCard);
+  //     }
+      
+  //     // 1mission. check if user is logged in 
+  //     // if not 
+  //     // 2mission. add item in session storage in array
+  //     // 3mission.login check if is something in session storage 
+  //     // if yes 
+  //     // send it to backend
+  //     // 4mission delete item in session storage
+
+// /////////////////////////////////////////////////////////////////////////////////
 
   const handleShopping = async (cardId) => {
-    const selectedCard = cards.find((card) => card._id === cardId);    
-    // const isCardInShoppingCart = shoppingCard.some((cardItem) => cardItem._id === cardId);
+    const selectedCard = cards.find((card) => card._id === cardId);
   
     try {
+      if (!token) {
+        const shoppingItems = JSON.parse(sessionStorage.getItem('shoppingItems')) || [];
+        shoppingItems.push(cardId);
+        sessionStorage.setItem('shoppingItems', JSON.stringify(shoppingItems));
+        console.log('Item added to session storage:', cardId);
+        return;
+      }
+  
+      
+      const sessionItems = JSON.parse(sessionStorage.getItem('shoppingItems')) || [];
+      if (sessionItems.length > 0) {
+        
+        await sendItemsToBackend(sessionItems);
+        
+        sessionStorage.removeItem('shoppingItems');
+      }
+  
+      
       await axios.patch(`http://localhost:8181/cards/${cardId}`, null, {
         headers: {
           'x-auth-token': token,
         },
       });
-      if(selectedCard.likes.includes(userObject._id)) {
+  
+      if (selectedCard.likes.includes(userObject._id)) {
         removeFromCard(cardId);
-      }else  {
+      } else {
         addToCard(selectedCard);
       }
-      sessionStorage.setItem('shoppingitem', cardId);
+  
+
       setCards(prev => {
         return prev.map(x => {
           if (x._id !== cardId) {return x;}
@@ -92,6 +137,16 @@ function Market() {
       console.error('Error shopping:', error);
     }
   };
+
+
+  const sendItemsToBackend = async (items) => {
+    try {
+      console.log('Sending items to the backend:', items);
+    } catch (error) {
+      console.error('Error sending items to the backend:', error);
+    }
+  };
+
 
 
   
@@ -289,9 +344,13 @@ function Market() {
                 <Link to={'/editCard/' + card._id} style={{color:'grey'}}><FaEdit className="edit-icon" onClick={(e) => handleEditClick(card._id, e)} /></Link>
                 </>
               )}
-            <FaShoppingBasket
+            {/* <FaShoppingBasket
             className={`shop-icon ${card.likes.includes(userObject?._id) ? 'added-to-cart' : ''}`}
             onClick={() => handleShopping(card._id)}
+/> */}
+<FaShoppingBasket
+  className={`shop-icon ${userObject && userObject._id && card.likes.includes(userObject._id) ? 'added-to-cart' : ''}`}
+  onClick={() => handleShopping(card._id)}
 />
             </div>
           ))}
