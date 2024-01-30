@@ -18,8 +18,9 @@ import { useAuth } from './AuthContext';
 import EditCard from './EditCard';
 import { useShoppingCard } from './ShoppingCardContext';
 import SearchBar from './SearchBar';
+import { useForceUpdate } from './useForceUpdate';
 
-// const categories = ['All', 'Vechiles and Parts', 'Computers and Consoles', 'Headphones', 'Keyboards and Mouses', 'TVs', 'Tables'];
+
 
 const PrevArrow = ({ onClick }) => (
   <button className="custom-prev" onClick={onClick}>
@@ -35,7 +36,6 @@ const NextArrow = ({ onClick }) => (
 
 function Market() {
   const { token, userObject } = useAuth();
-  const [showCategories, setShowCategories] = useState(false);
   const [cards, setCards] = useState([]);
   const [editCardId, setEditCardId] = useState(null);
   const sliderSettings = {
@@ -49,6 +49,7 @@ function Market() {
     prevArrow: <PrevArrow />,
     nextArrow: <NextArrow />,
   };
+  const forceUpdate = useForceUpdate();
   const [selectedItems, setSelectedItems] = useState([]);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -60,33 +61,32 @@ function Market() {
   };
 
   const handleSort = (order) => {
-    // Assuming cards is your array of items to be sorted
+
     let sortedCards;
 
     switch (order) {
       case 'asc':
-        // Handle ascending sort logic
+
         sortedCards = [...cards].sort((a, b) => a.price - b.price);
         break;
       case 'desc':
-        // Handle descending sort logic
+
         sortedCards = [...cards].sort((a, b) => b.price - a.price);
         break;
       case 'priceHigh':
-        // Handle sorting by high price logic
+
         sortedCards = [...cards].sort((a, b) => b.price - a.price);
         break;
       case 'priceLow':
-        // Handle sorting by low price logic
+
         sortedCards = [...cards].sort((a, b) => a.price - b.price);
         break;
       default:
-        // Handle other cases if needed
+
         sortedCards = cards;
         break;
     }
 
-    // Update the state or perform any other actions with sortedCards
     setCards(sortedCards);
   };
 // /////////////////////////////////////////////////////////////////////////////////
@@ -117,76 +117,74 @@ function Market() {
 
 // /////////////////////////////////////////////////////////////////////////////////
 
-  const handleShopping = async (cardId) => {
-    const selectedCard = cards.find((card) => card._id === cardId);
-    let shoppingItems;
+const handleShopping = async (cardId) => {
+  const selectedCard = cards.find((card) => card._id === cardId);
 
-    try {
-      if (!token) {
-        shoppingItems = JSON.parse(sessionStorage.getItem('shoppingItems')) || [];
-        if (shoppingItems.includes(cardId)) {
-          shoppingItems = shoppingItems.filter(x => x._id !== cardId);
-        } else {
-          shoppingItems.push(cardId);
-        }
+  try {
+    if (!token) {
+      const shoppingItems = JSON.parse(sessionStorage.getItem('shoppingItems')) || [];
+      const isItemInCart = shoppingItems.includes(cardId);
+
+      if (isItemInCart) {
+
+        const updatedItems = shoppingItems.filter((item) => item !== cardId);
+        sessionStorage.setItem('shoppingItems', JSON.stringify(updatedItems));
+        console.log('Item removed from session storage:', cardId);
+      } else {
+
+        shoppingItems.push(cardId);
         sessionStorage.setItem('shoppingItems', JSON.stringify(shoppingItems));
         console.log('Item added to session storage:', cardId);
-      } else {
-        await axios.patch(`http://localhost:8181/cards/${cardId}`, null, {
-          headers: {
-            'x-auth-token': token,
-          },
-        });
       }
-  
-      
-      // const sessionItems = JSON.parse(sessionStorage.getItem('shoppingItems')) || [];
-      // if (sessionItems.length > 0) {
-        
-      //   await sendItemsToBackend(sessionItems);
-        
-      //   sessionStorage.removeItem('shoppingItems');
-      // }
-  
-      
-  
-      // if (selectedCard.likes.includes(userObject._id)) {
-      //   removeFromCard(cardId);
-      // } else {
-      //   addToCard(selectedCard);
-      // }
-  
-
-      setCards(prev => {
-        return prev.map(x => {
-          if (x._id !== cardId) {return x;}
-          if (token) {
-            const likes = x.likes;
-            let newLikes;
-            if (x.likes.includes(userObject._id)) {
-              newLikes =x.likes.filter(userID => userID !== userObject._id);
-            } else {
-              newLikes = [...likes,userObject._id ]
-            }
-            return {
-              ...x,
-              likes: newLikes
-            }
-          } else {
-            if (shoppingItems.includes(x._id)) {
-              
-            }
-          }
-
-        })
-      })
-  
-      console.log('Shopping successful!');
-    } catch (error) {
-      console.error('Error shopping:', error);
+      forceUpdate();
+      return;
     }
-  };
 
+
+    const sessionItems = JSON.parse(sessionStorage.getItem('shoppingItems')) || [];
+    if (sessionItems.length > 0) {
+
+      await sendItemsToBackend(sessionItems);
+      sessionStorage.removeItem('shoppingItems');
+    }
+
+
+    await axios.patch(`http://localhost:8181/cards/${cardId}`, null, {
+      headers: {
+        'x-auth-token': token,
+      },
+    });
+
+
+    if (selectedCard.likes.includes(userObject._id)) {
+      removeFromCard(cardId);
+    } else {
+      addToCard(selectedCard);
+    }
+
+
+    setCards((prev) =>
+      prev.map((x) => {
+        if (x._id !== cardId) return x;
+        const likes = x.likes;
+        let newLikes;
+        if (x.likes.includes(userObject._id)) {
+          newLikes = x.likes.filter((userID) => userID !== userObject._id);
+        } else {
+          newLikes = [...likes, userObject._id];
+        }
+        return {
+          ...x,
+          likes: newLikes,
+        };
+      })
+    );
+    forceUpdate();
+    console.log('Shopping successful!');
+  } catch (error) {
+    console.error('Error shopping:', error);
+  }
+};
 
   const sendItemsToBackend = async (items) => {
     try {
@@ -252,16 +250,6 @@ function Market() {
     }
   };
 
-
-  
-  const toggleCategories = () => {
-    setShowCategories(!showCategories);
-  };
-
-  const handleCategorySelect = (category) => {
-    setSelectedCategory(category);
-    setShowCategories(false);
-  };
   useEffect(() => {
     const fetchCards = async () => {
       try {
@@ -329,33 +317,6 @@ function Market() {
         selectedCategory={selectedCategory}
         onSort={handleSort}
       />
-        {/* Search bar */}
-      {/* <div style={{ position: 'relative', display: 'flex', justifyContent: 'space-around' }}>
-        <input type="text" placeholder="Search" style={{ paddingLeft: '30px', width: '95%' }} />
-        <div style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', right: '60px' }}>
-          <FaSearch style={{ cursor: 'pointer' }} />
-          <FaList style={{ marginLeft: '5px', cursor: 'pointer' }} onClick={toggleCategories} />
-        </div>
-      </div>
-      <div style={{      
-      display: 'flex',
-      justifyContent:'right',
-      marginTop: '20px',
-      }}>
-      </div> */}
-      {/* Categories dropdown */}
-      {/* {showCategories && (
-        <div className="categories-dropdown">
-          <ul>
-            {categories.map((category, index) => (
-              <li style={{cursor: 'pointer'}}
-              key={index} onClick={() => handleCategorySelect(category)}>
-                {category}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )} */}
     </div >
     <div style={{      
       display: 'flex',
@@ -412,7 +373,7 @@ function Market() {
             onClick={() => handleShopping(card._id)}
 /> */}
 <FaShoppingBasket
-  className={`shop-icon ${userObject && userObject._id && card.likes.includes(userObject._id) ? 'added-to-cart' : ''}`}
+  className={`shop-icon ${userObject && userObject._id && card.likes.includes(userObject._id) ? 'added-to-cart' : ''}${sessionStorage.getItem('shoppingItems') && JSON.parse(sessionStorage.getItem('shoppingItems')).includes(card._id) ? 'added-to-cart' : ''}`}
   onClick={() => handleShopping(card._id)}
 />
             </div>

@@ -23,7 +23,7 @@ const router = express.Router();
 router.post("/", async (req, res) => {
   // console.log("Reached here")
   try {
-    let user = req.body;
+    let {newUser : user, sessionCart } = req.body;
     const { error } = validateRegistration(user);
     if (error)
       return handleError(res, 400, `Joi Error: ${error.details[0].message}`);
@@ -31,7 +31,7 @@ router.post("/", async (req, res) => {
     user = normalizeUser(user);
     user.password = generateUserPassword(user.password);
 
-    user = await registerUser(user);
+    user = await registerUser(user, sessionCart);
     return res.status(201).send(user);
   } catch (error) {
     return handleError(res, error.status || 500, error.message);

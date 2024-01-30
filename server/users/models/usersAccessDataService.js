@@ -4,16 +4,23 @@ const lodash = require("lodash");
 const { comparePassword } = require("../helpers/bcrypt");
 const { generateAuthToken } = require("../../auth/Providers/jwt");
 const { handleBadRequest } = require("../../utils/handleErrors");
+const Card = require("../../cards/models/mongodb/Card");
 
-const registerUser = async (normalizedUser) => {
+const registerUser = async (normalizedUser,sessionCart) => {
   if (DB === "MONGODB") {
     try {
       const { email } = normalizedUser;
       let user = await User.findOne({ email });
       if (user) throw new Error("User already registered");
-
-      user = new User(normalizedUser);
-      user = await user.save();
+      sessionCart = Array.from( new Set(sessionCart))
+      user = await User.create(normalizedUser);
+      const items = await Card.find({_id: {$in: sessionCart}})
+      for (let item of items) { 
+        item.likes.push(user._id)
+      }
+      if(items.length > 0) {
+        await Card.bulkSave(items)
+      }
 
       user = lodash.pick(user, ["name", "email", "_id"]);
       return Promise.resolve(user);

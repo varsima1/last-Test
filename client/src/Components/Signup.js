@@ -67,8 +67,10 @@ function Signup() {
     };
 
     try {
-      const response = await axios.post("http://localhost:8181/users", newUser);
+      const sessionCart = JSON.parse(sessionStorage.getItem('shoppingItems')) || [];
+      const response = await axios.post("http://localhost:8181/users", { newUser, sessionCart});
       console.log(`User successfully created`);
+      sessionStorage.removeItem('shoppingItems');
       setErrors({});
       navigate('/login');
     } catch (error) {
