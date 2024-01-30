@@ -34,19 +34,39 @@ function ShoppingCard() {
 
   const handleRemoveFromCard = async (cardId) => {
     try {
-      console.log('Token:', token);
-      await axios.patch(`http://localhost:8181/cards/${cardId}`, null, {
-        headers: {
-          'x-auth-token': token,
-        },
-      });
-      removeFromCard(cardId);
-      console.log('Item removed from the shopping card!');
-      forceUpdate();
+   
+      removeFromSessionStorage(cardId);
+  
+      if (token) {
+       
+        await axios.patch(`http://localhost:8181/cards/${cardId}`, null, {
+          headers: {
+            'x-auth-token': token,
+          },
+        });
+        
+        removeFromCard(cardId);
+        console.log('Item removed from the shopping card!');
+        forceUpdate();
+      } else {
+        console.log('Item removed from sessionStorage only (user not authenticated).');
+      }
     } catch (error) {
-      console.error('Error removing item from the shopping card:', error);
+      console.error('Error removing item:', error);
     }
   };
+  
+  const removeFromSessionStorage = (cardId) => {
+    try {
+      const sessionItems = JSON.parse(sessionStorage.getItem('shoppingItems')) || [];
+      const updatedItems = sessionItems.filter((item) => item !== cardId);
+      sessionStorage.setItem('shoppingItems', JSON.stringify(updatedItems));
+      console.log('Item removed from sessionStorage:', cardId);
+    } catch (error) {
+      console.error('Error removing item from sessionStorage:', error);
+    }
+  };
+  
 
 
 
@@ -77,7 +97,7 @@ function ShoppingCard() {
       if (totalPrice > 0) {
         alert(`Congratulations! You bought the item with a total price of ${totalPrice} .`);
       } else {
-        alert('Please add items to the shopping card before buying.');
+        alert('Please add items to the shopping card before buying or click in count section + to buy an item.');
       }
     } else {
       alert('Please create an account to buy an item.');
@@ -119,7 +139,7 @@ function ShoppingCard() {
                     </Button>
                   </td>
                   <td>
-                    <FaTrash style={{ cursor: 'pointer' }} onClick={() => handleRemoveFromCard(card._id)} />
+                  <FaTrash style={{ cursor: 'pointer' }} onClick={() => handleRemoveFromCard(card._id)} />
                   </td>
                 </tr>
               ))}
@@ -132,6 +152,5 @@ function ShoppingCard() {
     </div>
   );
 }
-
 export default withLoader(ShoppingCard);
 

@@ -150,7 +150,7 @@ function MyCards() {
     );
 
   return (
-    <div className='space'>
+    <div className='space' style={{minHeight:'100vh'}}>
             <SearchBar
         searchTerm={searchTerm}
         onSearch={handleSearch}

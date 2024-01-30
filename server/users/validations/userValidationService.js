@@ -13,7 +13,7 @@ const validateLogin = user => {
 };
 
 const validateUserUpdate = user => {
-  console.log(user)
+  // console.log(user)
   if (validator === "Joi") return userUpdateValidation(user);
 };
 
