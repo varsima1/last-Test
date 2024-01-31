@@ -6,9 +6,10 @@ import ErrorPage from './ErrorPage';
 import { Form, Button } from 'react-bootstrap';
 import { jwtDecode } from 'jwt-decode';
 import './scss/MarketCreateCard/createCard.scss'
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function MarketCreateCard({ onCardUpload }) {
+  const nav = useNavigate()
   const {token,userObject} = useAuth();
   const [imageAlt, setImageAlt] = useState('');
   const [imageUrl, setImageUrl] = useState('');
@@ -74,6 +75,7 @@ function MarketCreateCard({ onCardUpload }) {
       console.error('Error uploading card:', error.message);
       setError('Error uploading card. Please try again.');
     }
+    nav('/market')
   };
 
   return (

@@ -86,7 +86,7 @@ const getUser = async (userId) => {
 const updateUser = async (userId, normalizedUser) => {
   if (DB === "MONGODB") {
     try {
-      console.log(normalizedUser)
+      // console.log(normalizedUser)
       const user = await User.findByIdAndUpdate(userId,
          normalizedUser, {
         returnOriginal: false,

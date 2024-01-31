@@ -117,6 +117,7 @@ function Market() {
 
 // /////////////////////////////////////////////////////////////////////////////////
 
+
 const handleShopping = async (cardId) => {
   const selectedCard = cards.find((card) => card._id === cardId);
 
@@ -124,45 +125,35 @@ const handleShopping = async (cardId) => {
     if (!token) {
       const shoppingItems = JSON.parse(sessionStorage.getItem('shoppingItems')) || [];
       const isItemInCart = shoppingItems.includes(cardId);
-
       if (isItemInCart) {
-
         const updatedItems = shoppingItems.filter((item) => item !== cardId);
         sessionStorage.setItem('shoppingItems', JSON.stringify(updatedItems));
-        console.log('Item removed from session storage:', cardId);
+        removeFromCard(cardId)
+        // console.log('Item removed from session storage:', cardId);
       } else {
-
+        addToCard(selectedCard)
         shoppingItems.push(cardId);
         sessionStorage.setItem('shoppingItems', JSON.stringify(shoppingItems));
-        console.log('Item added to session storage:', cardId);
+        // console.log('Item added to session storage:', cardId);
       }
       forceUpdate();
       return;
     }
-
-
     const sessionItems = JSON.parse(sessionStorage.getItem('shoppingItems')) || [];
     if (sessionItems.length > 0) {
-
       await sendItemsToBackend(sessionItems);
       sessionStorage.removeItem('shoppingItems');
     }
-
-
     await axios.patch(`http://localhost:8181/cards/${cardId}`, null, {
       headers: {
         'x-auth-token': token,
       },
     });
-
-
     if (selectedCard.likes.includes(userObject._id)) {
       removeFromCard(cardId);
     } else {
       addToCard(selectedCard);
     }
-
-
     setCards((prev) =>
       prev.map((x) => {
         if (x._id !== cardId) return x;
@@ -180,11 +171,16 @@ const handleShopping = async (cardId) => {
       })
     );
     forceUpdate();
-    console.log('Shopping successful!');
+    // console.log('Shopping successful!');
   } catch (error) {
     console.error('Error shopping:', error);
   }
 };
+// ///////////////////////////////////////////////////////////////////////////////////
+
+// ///////////////////////////////////////////////////////////////////////////////////
+
+
 
   const sendItemsToBackend = async (items) => {
     try {

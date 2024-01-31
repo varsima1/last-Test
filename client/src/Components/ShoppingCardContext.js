@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useReducer } from 'react';
+import { createContext, useCallback, useContext, useEffect, useReducer } from 'react';
 import { useAuth } from './AuthContext';
 import axios from 'axios';
 import { useForceUpdate } from './useForceUpdate';
@@ -30,7 +30,6 @@ export const ShoppingCardProvider = ({ children }) => {
     }
   };
 
-  
   useEffect(() => {
     const fetchCards = async () => {
       try {
@@ -55,13 +54,12 @@ export const ShoppingCardProvider = ({ children }) => {
             type: 'ALL',
             payload:  Array.from(new Set(response.data.filter((item) => sessionCart.includes(item._id))))})
         }
-      forceUpdate();
       } catch (error) {
         console.error('Error fetching cards:', error);
       }
     };
     fetchCards();
-  }, [userObject]);
+  }, [userObject,sessionStorage]);
 // usecallback
 // sweetalert
 

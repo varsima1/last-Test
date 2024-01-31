@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FaEdit, FaTrash, FaShoppingBasket } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaShoppingBasket,FaPlusCircle } from 'react-icons/fa';
 import { useAuth } from './AuthContext';
 import './scss/Market/market.scss';
 import ErrorPage from './ErrorPage';
@@ -149,7 +149,16 @@ function MyCards() {
         onSearch={handleSearch}
         selectedCategory={selectedCategory}
         onSort={handleSort}
-      />
+      /><Link to={'/marketCreateCard'} title='Add item and sell it'>
+      <FaPlusCircle  style={{
+        height:'40px',
+        width:'40px',
+        color:'#007bff',
+        cursor:'pointer',
+        backgroundColor:'white',
+        borderRadius:'30px',
+        }}/>
+  </Link>
       <div className="mcard-container">
       {filteredAndSortedCards.map((card) => (
           <div className="mcards" key={card._id}>

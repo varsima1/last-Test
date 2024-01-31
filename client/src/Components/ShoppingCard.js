@@ -8,17 +8,30 @@ import { Button } from 'react-bootstrap';
 import withLoader from './loader/withLoader';
 import { useForceUpdate } from './useForceUpdate';
 
+
 function ShoppingCard() {
   const { token } = useAuth();
   const { shoppingCard, removeFromCard, updateItemCount } = useShoppingCard();
   const [totalPrice, setTotalPrice] = useState(0);
   const forceUpdate = useForceUpdate();
+  // const [cartItems, setItems] = useState([]);
 
-
+  // useEffect(() => {
+  //   const fetchItems = async () => {
+  //     try {
+  //         const response = await axios.get('http://localhost:8181/cards');
+  //         setItems(response.data.filter(item => cartItems.includes(item._id)))
+  //     } catch (error) {
+  //         console.error('Error fetching cards:', error);
+  //     }
+  //   };
+  
+  //   fetchItems();
+  // }, []);
 
   useEffect(() => {
     calculateTotalPrice();
-  }, [shoppingCard]);
+  }, [shoppingCard,]);
   
 
   const calculateTotalPrice = () => {
@@ -51,6 +64,7 @@ function ShoppingCard() {
         console.log('Item removed from the shopping card!');
         forceUpdate();
       } else {
+        removeFromCard(cardId);
         console.log('Item removed from sessionStorage only (user not authenticated).');
       }
     } catch (error) {
@@ -68,12 +82,6 @@ function ShoppingCard() {
       console.error('Error removing item from sessionStorage:', error);
     }
   };
-  
-
-  useEffect(() => {
-
-  }, [shoppingCard]);
-  
 
 
   const handleIncreaseItemCount = (cardId) => {
