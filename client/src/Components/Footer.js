@@ -20,6 +20,9 @@ export const Footer = () => {
             <li className="nav-item">
               <Link to='/market' className="nav-link text-light">Market</Link>
             </li>
+            <li className="nav-item">
+              <Link to='/shoppingCard' className="nav-link text-light">card</Link>
+            </li>
             {userObject?.isSeller && (
             <li className="nav-item">
               <Link to='/mycards' className="nav-link text-light">My Card</Link>

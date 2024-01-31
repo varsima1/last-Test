@@ -7,7 +7,7 @@ import ErrorPage from './ErrorPage';
 import withLoader from './loader/withLoader';
 import { Link } from 'react-router-dom';
 import SearchBar from './SearchBar';
-
+import { useForceUpdate } from './useForceUpdate';
 
 function MyCards() {
   const { token, userObject } = useAuth();
@@ -16,6 +16,7 @@ function MyCards() {
   const [editCardId, setEditCardId] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
+  const forceUpdate = useForceUpdate();
 
   const handleSearch = ({ term, category }) => {
     setSearchTerm(term);
@@ -55,8 +56,9 @@ function MyCards() {
           },
         });
         setMyCards(response.data);
-        setCards(response.data); // Update cards for sorting and searching
+        setCards(response.data);
       }
+      forceUpdate();
     } catch (error) {
       console.error('Error fetching my cards:', error);
     }
@@ -87,6 +89,7 @@ function MyCards() {
             prevCards.map((prevCard) => (prevCard._id === updatedCard._id ? updatedCard : prevCard))
           );
         }
+        forceUpdate();
       } catch (error) {
         console.error('Error editing card:', error);
         e.preventDefault();
@@ -108,6 +111,7 @@ function MyCards() {
           });
           setMyCards(response.data);
         }
+        forceUpdate();
       } catch (error) {
         console.error('Error fetching my cards:', error);
       }
@@ -126,23 +130,12 @@ function MyCards() {
           },
         });
         console.log('Card deleted!');
-        setMyCards((prev) =>
-          prev.filter((x) => {
-            if (x._id === cardId) {
-              return false;
-            }
-            return true;
-          })
-        );
+        setCards((prev) => prev.filter((x) => (x._id === cardId ? false : true)));
       } catch (error) {
         console.error('Error deleting card:', error);
       }
     }
   };
-  if (!token) {
-    return <div><ErrorPage/></div>;
-  }
-
   const filteredAndSortedCards = cards
     .filter((card) =>
       card.title.toLowerCase().includes(searchTerm.toLowerCase()) &&

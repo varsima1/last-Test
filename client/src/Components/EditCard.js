@@ -4,14 +4,16 @@ import axios from 'axios';
 import { useAuth } from './AuthContext';
 import withLoader from './loader/withLoader';
 import ErrorPage from './ErrorPage';
-import { useParams} from 'react-router-dom';
+import { useParams,useNavigate} from 'react-router-dom';
+
+
 
 
 function EditCard({ onCardUpdate }) {
+  const nav = useNavigate()
   const { token, userObject } = useAuth();
   const params = useParams();
   const { cardId } = params;
-  console.log('card ID',cardId);
   const [currency, setCurrency] = useState('USD');
   const [card, setCard] = useState({
     image: { url: '', alt: '' },
@@ -74,10 +76,12 @@ function EditCard({ onCardUpdate }) {
         },
       });
 
+      
       onCardUpdate(response.data);
     } catch (error) {
       console.error('Error updating card:', error.message);
     }
+    nav('/market')
   };
 
   if (!userObject?.isSeller) {
@@ -115,6 +119,10 @@ function EditCard({ onCardUpdate }) {
         <div>
           <label htmlFor='subtitle'>Subtitle:</label>
           <textarea id='subtitle' value={card.subtitle} onChange={(e) => setCard({ ...card, subtitle: e.target.value })} />
+        </div>
+        <div>
+          <label htmlFor='subtitle'>Description:</label>
+          <textarea id='subtitle' value={card.description} onChange={(e) => setCard({ ...card, description: e.target.value })} />
         </div>
         <div>
           <label htmlFor='price'>Price:</label>

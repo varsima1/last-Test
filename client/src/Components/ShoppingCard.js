@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useCallback } from 'react';
 import { useAuth } from './AuthContext';
 import { FaTrash } from 'react-icons/fa';
 import axios from 'axios';
@@ -13,6 +13,8 @@ function ShoppingCard() {
   const { shoppingCard, removeFromCard, updateItemCount } = useShoppingCard();
   const [totalPrice, setTotalPrice] = useState(0);
   const forceUpdate = useForceUpdate();
+
+
 
   useEffect(() => {
     calculateTotalPrice();
@@ -68,7 +70,10 @@ function ShoppingCard() {
   };
   
 
+  useEffect(() => {
 
+  }, [shoppingCard]);
+  
 
 
   const handleIncreaseItemCount = (cardId) => {

@@ -31,7 +31,6 @@ export const ShoppingCardProvider = ({ children }) => {
   };
 
   
-
   useEffect(() => {
     const fetchCards = async () => {
       try {
@@ -56,15 +55,15 @@ export const ShoppingCardProvider = ({ children }) => {
             type: 'ALL',
             payload:  Array.from(new Set(response.data.filter((item) => sessionCart.includes(item._id))))})
         }
-       forceUpdate();
+      forceUpdate();
       } catch (error) {
         console.error('Error fetching cards:', error);
       }
     };
-     fetchCards();
+    fetchCards();
   }, [userObject]);
-
-
+// usecallback
+// sweetalert
 
   const [shoppingCard, dispatch] = useReducer(shoppingCardReducer, initialState);
 
